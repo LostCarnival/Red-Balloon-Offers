@@ -30,3 +30,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Copyright 2005-2015 Automattic, Inc.
 */
+
+if ( !defined( 'ABSPATH' ) ) {
+	die;
+}
+
+class RedBalloonOffers
+{
+	function __construct() {
+		add_action( 'init', array( $this, 'red_balloon_offers_post_type' ) );
+	}
+
+	function activate() {
+		$this->red_balloon_offers_post_type();
+		flush_rewrite_rules();
+	}
+
+	function deactivate() {
+		flush_rewrite_rules();
+	}
+
+	function red_balloon_offers_post_type() {
+		register_post_type( 'offer', ['public' => true, 'label' => 'Offers'] );
+	}
+}
+
+if ( class_exists( 'RedBalloonOffers' ) ) {
+	$redBalloonOffers = new RedBalloonOffers();
+}
+
+register_activation_hook( __FILE__, array( $redBalloonOffers, 'activate' ) );
+
+register_deactivation_hook( __FILE__, array( $redBalloonOffers, 'deactivate' ) );
