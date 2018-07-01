@@ -2,6 +2,7 @@
 /**
  * @package RedBalloonOffers
  */
+
 /*
 Plugin Name: Red Balloon Offers
 Plugin URI: https://github.com/LostCarnival/Red-Balloon-Offers
