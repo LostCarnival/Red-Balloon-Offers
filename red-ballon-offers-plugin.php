@@ -38,12 +38,13 @@ if ( !defined( 'ABSPATH' ) ) {
 
 class RedBalloonOffers
 {
-	function __construct() {
-		add_action( 'init', array( $this, 'red_balloon_offers_post_type' ) );
+	function register() {
+		add_action( 'init', array( $this, 'create_offers_post_type' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
 
 	function activate() {
-		$this->red_balloon_offers_post_type();
+		$this->create_offers_post_type();
 		flush_rewrite_rules();
 	}
 
@@ -51,13 +52,19 @@ class RedBalloonOffers
 		flush_rewrite_rules();
 	}
 
-	function red_balloon_offers_post_type() {
+	function create_offers_post_type() {
 		register_post_type( 'offer', ['public' => true, 'label' => 'Offers'] );
+	}
+
+	function enqueue() {
+		wp_enqueue_style( 'offerstyle', plugins_url( '/assets/style.css', __FILE__ ) );
+		wp_enqueue_script( 'offerscript', plugins_url( '/assets/script.css', __FILE__ ) );
 	}
 }
 
 if ( class_exists( 'RedBalloonOffers' ) ) {
 	$redBalloonOffers = new RedBalloonOffers();
+	$redBalloonOffers->register();
 }
 
 register_activation_hook( __FILE__, array( $redBalloonOffers, 'activate' ) );
