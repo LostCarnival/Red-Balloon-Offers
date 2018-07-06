@@ -78,11 +78,11 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 			foreach ( $this->customFields as $customField ) {
 				if ( current_user_can( $customField['capability'], $post_id ) ) {
 					if ( isset( $_POST[ $this->prefix . $customField['name'] ] ) && trim( $_POST[ $this->prefix . $customField['name'] ] ) ) {
-                        $value = $_POST[ $this->prefix . $customField['name'] ];
-                        update_post_meta( $post_id, $this->prefix . $customField['name'], $value );
-                    } else {
-                        delete_post_meta( $post_id, $this->prefix . $customField['name'] );
-                    }
+						$value = $_POST[ $this->prefix . $customField['name'] ];
+						update_post_meta( $post_id, $this->prefix . $customField['name'], $value );
+					} else {
+						delete_post_meta( $post_id, $this->prefix . $customField['name'] );
+					}
 				}
 			}
 		}
