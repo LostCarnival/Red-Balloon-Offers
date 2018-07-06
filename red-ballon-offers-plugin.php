@@ -53,7 +53,16 @@ class RedBalloonOffers
 	}
 
 	function create_offers_post_type() {
-		register_post_type( 'offer', ['public' => true, 'label' => 'Offers'] );
+		$args = array(
+			'label'    => 'Offers',
+			'public'   => true,
+			'supports' => array(
+				'title',
+				'editor',
+				'thumbnail'
+			)
+		);
+		register_post_type( 'offer', $args );
 	}
 
 	function enqueue() {
@@ -61,6 +70,8 @@ class RedBalloonOffers
 		wp_enqueue_script( 'offerscript', plugins_url( '/assets/script.css', __FILE__ ) );
 	}
 }
+
+require_once plugin_dir_path( __FILE__ ) . 'custom-fields.php';
 
 if ( class_exists( 'RedBalloonOffers' ) ) {
 	$redBalloonOffers = new RedBalloonOffers();
