@@ -36,39 +36,43 @@ if ( !defined( 'ABSPATH' ) ) {
 	die;
 }
 
-class RedBalloonOffers
-{
-	function register() {
-		add_action( 'init', array( $this, 'create_offers_post_type' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+if ( !class_exists( 'RedBalloonOffers' ) ) {
+
+	class RedBalloonOffers
+	{
+		function register() {
+			add_action( 'init', array( $this, 'create_offers_post_type' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+		}
+
+		function activate() {
+			$this->create_offers_post_type();
+			flush_rewrite_rules();
+		}
+
+		function deactivate() {
+			flush_rewrite_rules();
+		}
+
+		function create_offers_post_type() {
+			$args = array(
+				'label'    => 'Offers',
+				'public'   => true,
+				'supports' => array(
+					'title',
+					'editor',
+					'thumbnail'
+				)
+			);
+			register_post_type( 'offer', $args );
+		}
+
+		function enqueue() {
+			wp_enqueue_style( 'offerstyle', plugins_url( '/assets/style.css', __FILE__ ) );
+			wp_enqueue_script( 'offerscript', plugins_url( '/assets/script.css', __FILE__ ) );
+		}
 	}
 
-	function activate() {
-		$this->create_offers_post_type();
-		flush_rewrite_rules();
-	}
-
-	function deactivate() {
-		flush_rewrite_rules();
-	}
-
-	function create_offers_post_type() {
-		$args = array(
-			'label'    => 'Offers',
-			'public'   => true,
-			'supports' => array(
-				'title',
-				'editor',
-				'thumbnail'
-			)
-		);
-		register_post_type( 'offer', $args );
-	}
-
-	function enqueue() {
-		wp_enqueue_style( 'offerstyle', plugins_url( '/assets/style.css', __FILE__ ) );
-		wp_enqueue_script( 'offerscript', plugins_url( '/assets/script.css', __FILE__ ) );
-	}
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'custom-fields.php';
