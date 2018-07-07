@@ -41,11 +41,13 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 	class RedBalloonOffers
 	{
 		function register() {
+			add_action( 'init', array( $this, 'create_hotels_post_type' ) );
 			add_action( 'init', array( $this, 'create_offers_post_type' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
 		}
 
 		function activate() {
+			$this->create_hotels_post_type();
 			$this->create_offers_post_type();
 			flush_rewrite_rules();
 		}
@@ -54,9 +56,15 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 			flush_rewrite_rules();
 		}
 
-		function create_offers_post_type() {
+		function create_hotels_post_type() {
+			$labels = array(
+				'add_new'      => 'Add New Hotel',
+				'add_new_item' => 'New Hotel Name',
+				'edit_item'    => 'Edit Hotel Name'
+			);
 			$args = array(
-				'label'    => 'Offers',
+				'label'    => 'Hotels',
+				'labels'   => $labels,
 				'public'   => true,
 				'supports' => array(
 					'title',
@@ -64,18 +72,36 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 					'thumbnail'
 				)
 			);
+			register_post_type( 'hotel', $args );
+		}
+
+		function create_offers_post_type() {
+			$labels = array(
+				'add_new'      => 'Add New Offer',
+				'add_new_item' => 'New Room Name',
+				'edit_item'    => 'Edit Room Name'
+			);
+			$args = array(
+				'label'    => 'Offers',
+				'labels'   => $labels,
+				'public'   => true,
+				'supports' => array(
+					'title',
+					'editor'
+				)
+			);
 			register_post_type( 'offer', $args );
 		}
 
 		function enqueue() {
-			wp_enqueue_style( 'offerstyle', plugins_url( '/assets/style.css', __FILE__ ) );
-			wp_enqueue_script( 'offerscript', plugins_url( '/assets/script.css', __FILE__ ) );
+			wp_enqueue_style( 'red-balloon-offers-style', plugins_url( '/assets/style.css', __FILE__ ) );
+			wp_enqueue_script( 'red-balloon-offers-script', plugins_url( '/assets/script.css', __FILE__ ) );
 		}
 	}
 
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'custom-fields.php';
+require_once plugin_dir_path( __FILE__ ) . 'offers-custom-fields.php';
 
 if ( class_exists( 'RedBalloonOffers' ) ) {
 	$redBalloonOffers = new RedBalloonOffers();
@@ -83,5 +109,4 @@ if ( class_exists( 'RedBalloonOffers' ) ) {
 }
 
 register_activation_hook( __FILE__, array( $redBalloonOffers, 'activate' ) );
-
 register_deactivation_hook( __FILE__, array( $redBalloonOffers, 'deactivate' ) );

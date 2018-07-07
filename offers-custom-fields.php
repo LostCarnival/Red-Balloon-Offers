@@ -1,6 +1,6 @@
 <?php
 /**
- * RedBalloonOffers custom fields
+ * Offers CPT custom fields
  *
  * @package RedBalloonOffers
  */
@@ -27,13 +27,13 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 
 		function create_custom_fields() {
 			if ( function_exists( 'add_meta_box' ) ) {
-				add_meta_box( 'offer-custom-fields', 'Offer Fields', array( $this, 'display_custom_fields' ), 'offer', 'normal' );
+				add_meta_box( 'offers-custom-fields', 'Offer Fields', array( $this, 'display_custom_fields' ), 'offer', 'normal' );
 			}
 		}
 
 		function display_custom_fields() {
 			global $post;
-			wp_nonce_field( 'offer-custom-fields', 'offer-custom-fields_wpnonce', false );
+			wp_nonce_field( 'offers-custom-fields', 'offers-custom-fields_wpnonce', false );
 			echo '<div class="form-wrap">';
 
 			foreach ( $this->customFields as $customField ) {
@@ -47,6 +47,7 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 
 				if ( $output ) {
 					echo '<div class="form-field">';
+
 					switch ( $customField['type'] ) {
 						case 'number':
 						case 'date':
@@ -57,9 +58,11 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 							break;
 						}
 					}
+
 					if ( $customField['description'] ) {
 						echo '<p>' . $customField['description'] . '</p>';
 					}
+
 					echo '</div>';
 				}
 			}
@@ -68,7 +71,7 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 		}
 
 		function save_custom_fields( $post_id, $post ) {
-			if ( !isset( $_POST['offer-custom-fields_wpnonce'] ) || !wp_verify_nonce( $_POST['offer-custom-fields_wpnonce'], 'offer-custom-fields' ) )
+			if ( !isset( $_POST['offers-custom-fields_wpnonce'] ) || !wp_verify_nonce( $_POST['offers-custom-fields_wpnonce'], 'offers-custom-fields' ) )
 				return;
 			if ( !current_user_can( 'edit_post', $post_id ) )
 				return;
