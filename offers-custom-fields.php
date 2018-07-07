@@ -53,7 +53,7 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 						case 'date':
 						case 'text': {
 							echo '<label for="' . $this->prefix . $customField['name'] .'"><b>' . $customField['title'] . '</b></label>';
-							echo '<input type="text" name="' . $this->prefix . $customField['name'] . '" id="' . $this->prefix . $customField['name'] . '"';
+							echo '<input type="text" style="max-width: 300px;" name="' . $this->prefix . $customField['name'] . '" id="' . $this->prefix . $customField['name'] . '"';
 							echo ' value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $customField['name'], true ) ) . '" />';
 							break;
 						}

@@ -43,6 +43,12 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 		function register() {
 			add_action( 'init', array( $this, 'create_hotels_post_type' ) );
 			add_action( 'init', array( $this, 'create_offers_post_type' ) );
+			add_action( 'add_meta_boxes', function () {
+				add_meta_box( 'offer-hotels', 'Hotels', array( $this, 'offer_hotels_metabox' ), 'offer', 'side', 'low' );
+			} );
+			add_action( 'add_meta_boxes', function () {
+				add_meta_box( 'hotel-offers', 'Offers', array( $this, 'hotel_offers_metabox' ), 'hotel', 'side', 'low' );
+			} );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
 		}
 
@@ -68,7 +74,6 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				'public'   => true,
 				'supports' => array(
 					'title',
-					'editor',
 					'thumbnail'
 				)
 			);
@@ -86,11 +91,40 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				'labels'   => $labels,
 				'public'   => true,
 				'supports' => array(
-					'title',
-					'editor'
+					'title'
 				)
 			);
 			register_post_type( 'offer', $args );
+		}
+
+		function offer_hotels_metabox() {
+			global $post;
+			$hotels = get_posts( array( 'post_type'=>'hotel', 'posts_per_page'=>-1, 'orderby'=>'post_title', 'order'=>'ASC' ) );
+			if ( $hotels ) {
+				echo '<div style="max-height:250px; overflow-y:auto;"><ul>';
+				foreach ($hotels as $hotel) {
+					echo '
+					<li><label>
+					<input type="radio" name="post_parent" value="'. $hotel->ID .'" '. checked( $hotel->ID, $post->post_parent, 0 ) .'> '. esc_html( $hotel->post_title ) .'
+					</label></li>
+					';
+				}
+				echo '</ul></div>';
+			} else {
+				echo 'There\'s no hotels at all.';
+			}
+		}
+
+		function hotel_offers_metabox() {
+			global $post;
+			$offers = get_posts( array( 'post_type'=>'offer', 'post_parent'=>$post->ID, 'posts_per_page'=>-1, 'orderby'=>'post_title', 'order'=>'ASC' ) );
+			if ( $offers ) {
+				foreach ($offers as $offer) {
+					echo $offer->post_title .'<br/>';
+				}
+			} else {
+				echo 'There\'s no offers for this hotel yet.';
+			}
 		}
 
 		function enqueue() {
