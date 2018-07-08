@@ -105,7 +105,8 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				foreach ($hotels as $hotel) {
 					echo '
 					<li><label>
-					<input type="radio" name="post_parent" value="'. $hotel->ID .'" '. checked( $hotel->ID, $post->post_parent, 0 ) .'> '. esc_html( $hotel->post_title ) .'
+					<input type="radio" name="post_parent" value="'. $hotel->ID .'" '. checked( $hotel->ID, $post->post_parent, 0 ) .'> '
+					. esc_html( $hotel->post_title ) .'
 					</label></li>
 					';
 				}

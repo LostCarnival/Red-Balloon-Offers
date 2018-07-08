@@ -12,10 +12,45 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 		var $prefix = '_ocf_';
 		var $customFields = array(
 			array(
+				'name'        => 'rate',
+				'title'       => 'Rate',
+				'description' => '',
+				'type'        => 'number',
+				'capability'  => 'edit_posts'
+			),
+			array(
+				'name'        => 'adult',
+				'title'       => 'Number of Adult',
+				'description' => '',
+				'type'        => 'number',
+				'capability'  => 'edit_posts'
+			),
+			array(
+				'name'        => 'child',
+				'title'       => 'Number of Child',
+				'description' => '',
+				'type'        => 'number',
+				'capability'  => 'edit_posts'
+			),
+			array(
 				'name'        => 'cost',
 				'title'       => 'Cost',
-				'description' => '',
+				'description' => 'For example: $ 12.50 USD/NIGHT',
 				'type'        => 'text',
+				'capability'  => 'edit_posts'
+			),
+			array(
+				'name'        => 'arrival',
+				'title'       => 'Arrival Date',
+				'description' => '',
+				'type'        => 'date',
+				'capability'  => 'edit_posts'
+			),
+			array(
+				'name'        => 'departure',
+				'title'       => 'Departure Date',
+				'description' => '',
+				'type'        => 'date',
 				'capability'  => 'edit_posts'
 			)
 		);
@@ -49,12 +84,35 @@ if ( !class_exists( 'OffersCustomFields' ) ) {
 					echo '<div class="form-field">';
 
 					switch ( $customField['type'] ) {
-						case 'number':
-						case 'date':
+						case 'number': {
+							$current_number = get_post_meta( $post->ID, $this->prefix . $customField['name'], true );
+							echo '<label for="' . $this->prefix . $customField['name'] .'"><b>' . $customField['title'] . '</b></label>';
+							echo '<select name="' . $this->prefix . $customField['name'] . '">';
+							for ($i=1; $i<=5; $i++) {
+								echo '<option value="' . $i . '"';
+								if ( $current_number == $i ) echo ' selected';
+								echo '>' . $i . '</option>';
+							}
+							echo '</select>';
+							break;
+						}
+						case 'date': {
+							$current_date = get_post_meta( $post->ID, $this->prefix . $customField['name'], true );
+							echo '<label for="' . $this->prefix . $customField['name'] .'"><b>' . $customField['title'] . '</b></label>';
+							echo '<input type="date" name="' . $this->prefix . $customField['name'] . '" id="' . $this->prefix . $customField['name'] . '"';
+							echo ' value="';
+							if ( !empty( $current_date ) ) {
+								echo $current_date;
+							} else {
+								echo date('Y-m-d');
+							}
+							echo '" />';
+							break;
+						}
 						case 'text': {
 							echo '<label for="' . $this->prefix . $customField['name'] .'"><b>' . $customField['title'] . '</b></label>';
-							echo '<input type="text" style="max-width: 300px;" name="' . $this->prefix . $customField['name'] . '" id="' . $this->prefix . $customField['name'] . '"';
-							echo ' value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $customField['name'], true ) ) . '" />';
+							echo '<input type="text" style="max-width: 12rem;" name="' . $this->prefix . $customField['name'] . '" id="' . $this->prefix . $customField['name'] . '"';
+							echo ' value="' . get_post_meta( $post->ID, $this->prefix . $customField['name'], true ) . '" />';
 							break;
 						}
 					}
