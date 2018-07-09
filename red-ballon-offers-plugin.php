@@ -69,10 +69,11 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				'edit_item'    => 'Edit Hotel Name'
 			);
 			$args = array(
-				'label'    => 'Hotels',
-				'labels'   => $labels,
-				'public'   => true,
-				'supports' => array(
+				'label'     => 'Hotels',
+				'labels'    => $labels,
+				'menu_icon' => 'dashicons-building',
+				'public'    => true,
+				'supports'  => array(
 					'title',
 					'thumbnail'
 				)
@@ -87,10 +88,11 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				'edit_item'    => 'Edit Room Name'
 			);
 			$args = array(
-				'label'    => 'Offers',
-				'labels'   => $labels,
-				'public'   => true,
-				'supports' => array(
+				'label'     => 'Offers',
+				'labels'    => $labels,
+				'menu_icon' => 'dashicons-thumbs-up',
+				'public'    => true,
+				'supports'  => array(
 					'title'
 				)
 			);
@@ -99,7 +101,14 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 
 		function offer_hotels_metabox() {
 			global $post;
-			$hotels = get_posts( array( 'post_type'=>'hotel', 'posts_per_page'=>-1, 'orderby'=>'post_title', 'order'=>'ASC' ) );
+			$hotels = get_posts(
+				array(
+					'post_type'      => 'hotel',
+					'posts_per_page' => -1,
+					'orderby'        => 'post_title',
+					'order'          => 'ASC'
+				)
+			);
 			if ( $hotels ) {
 				echo '<div style="max-height:250px; overflow-y:auto;"><ul>';
 				foreach ($hotels as $hotel) {
@@ -112,19 +121,27 @@ if ( !class_exists( 'RedBalloonOffers' ) ) {
 				}
 				echo '</ul></div>';
 			} else {
-				echo 'There\'s no hotels at all.';
+				echo 'There\'s no hotels at all';
 			}
 		}
 
 		function hotel_offers_metabox() {
 			global $post;
-			$offers = get_posts( array( 'post_type'=>'offer', 'post_parent'=>$post->ID, 'posts_per_page'=>-1, 'orderby'=>'post_title', 'order'=>'ASC' ) );
+			$offers = get_posts(
+				array(
+					'post_type'      => 'offer',
+					'post_parent'    => $post->ID,
+					'posts_per_page' => -1,
+					'orderby'        => 'post_title',
+					'order'          => 'ASC'
+				)
+			);
 			if ( $offers ) {
 				foreach ($offers as $offer) {
 					echo $offer->post_title .'<br/>';
 				}
 			} else {
-				echo 'There\'s no offers for this hotel yet.';
+				echo 'There\'s no offers for this hotel yet';
 			}
 		}
 
